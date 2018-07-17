@@ -67,7 +67,7 @@ class DoubanCrawler(BasicCrawler):
         styled = self.styling(page_data)
         if styled:
             self.linking(page_data)
-            # self.tagging(page_data)
+            self.tagging(page_data)
 
     @staticmethod
     def get_linked_url(page_data):
@@ -88,14 +88,11 @@ class DoubanCrawler(BasicCrawler):
         """
         fetch tag for the current movie
         """
-        label_a = pq(page_data)('body').find('div').filter('.tags-body')('a')
-        labels = []
-        i = 0
-        label_i = label_a.eq(i)
-        while label_i:
-            tag = label_i.text()
-            labels.append(tag)
-        return labels
+        doc = pq(page_data)
+        items = doc('.tags-body')
+        tags = items.find('a').text()
+        print(tags)
+        return tags
 
     @staticmethod
     def get_genres(page_data):
@@ -157,13 +154,14 @@ class DoubanCrawler(BasicCrawler):
         for t in tags:
             attr_graph.add_edge(current_url, t)
 
-    def show_tag_num(self):
+    def show_graph_attributes(self):
         """
-        Show the current amount of movies in each class
+        Show the current amount of nodes, edges in the graphs
         """
         count_styles = self.count_styles
         print('# of nodes', self.graph.number_of_nodes())
         print('# of links', self.graph.number_of_edges())
+        print('# of attributes', self.attr_graph.number_of_nodes()-self.graph.number_of_nodes())
         for key, count in count_styles.items():
             print(key, count)
 
@@ -194,5 +192,5 @@ if __name__ == "__main__":
     crawler = DoubanCrawler(args.max_size)
     crawler.start_with(args.starting_url)
     crawler.run()
-    crawler.show_tag_num()
+    crawler.show_graph_attributes()
     crawler.save(path=args.path)
