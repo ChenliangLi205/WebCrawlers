@@ -63,7 +63,7 @@ class BasicCrawler(object):
         try:
             data = urllib.request.urlopen(self.request()).read().decode('utf-8')
         except:
-            print('failed to open url ' + self.current_url)
+            print('failed to open url %s' % self.current_url)
             print('probably ip blocked, trying again in one hour...')
             time.sleep(self.time_sleep)
             self.url_queue.appendleft(self.current_url)
@@ -78,7 +78,7 @@ class BasicCrawler(object):
             self.current_url = self.url_queue.popleft()
 
             if self.current_url not in self.visited:
-                print('crawling url ' + self.current_url + ' ' + str(len(self.visited)) + ' urls crawled')
+                print("crawling url %s, %d urls crawled" % (self.current_url, len(self.visited)))
                 self.visited.add(self.current_url)
                 return self.retrieve()
             else:

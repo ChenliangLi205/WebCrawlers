@@ -35,11 +35,11 @@ class DoubanCrawler(BasicCrawler):
         self.max_size = max_size
         self.count = 0
         self.styles = ["爱情片", "动作片", "战争片", "犯罪片",
-                     "动画片", "悬疑片", "喜剧片", "科幻片"]
-        self.count_tags = {}
-        self.node_tags = {}
+                       "动画片", "悬疑片", "喜剧片", "科幻片"]
+        self.count_styles = {}
+        self.node_styles = {}
         for s in self.styles:
-            self.count_tags[s] = 0
+            self.count_styles[s] = 0
         self.graph = nx.Graph()
         self.attr_graph = nx.Graph()
 
@@ -133,14 +133,14 @@ class DoubanCrawler(BasicCrawler):
         fetch genre for the current movie
         """
         styles = self.styles
-        count_tags = self.count_tags
+        count_styles = self.count_styles
         current_url = self.current_url
         genres = self.get_genres(page_data)
         for g in genres:
             if g in styles:
-                print(current_url + ' is ' +g)
-                self.node_tags[current_url] = g
-                count_tags[g] += 1
+                print('%s is %s' % (current_url, g))
+                self.node_styles[current_url] = g
+                count_styles[g] += 1
                 return True
         print('Cannot get the type of this movie')
         self.graph.remove_node(current_url)
@@ -161,10 +161,10 @@ class DoubanCrawler(BasicCrawler):
         """
         Show the current amount of movies in each class
         """
-        count_tags = self.count_tags
+        count_styles = self.count_styles
         print('# of nodes', self.graph.number_of_nodes())
         print('# of links', self.graph.number_of_edges())
-        for key, count in count_tags.items():
+        for key, count in count_styles.items():
             print(key, count)
 
     def save(self, path):
@@ -174,13 +174,13 @@ class DoubanCrawler(BasicCrawler):
         graph_file = 'graph.edgelist'
         attrgraph_file = 'attrgraph.edgelist'
         nodelabel_file = 'labels.txt'
-        node_tags = self.node_tags
+        node_styles = self.node_styles
         graph = self.graph
         nx.write_edgelist(G=graph, path=path+graph_file, data=False)
         nx.write_edgelist(G=graph, path=path+attrgraph_file, data=False)
         with open(path+nodelabel_file, 'w') as f:
             for node in graph.nodes():
-                f.writelines(str(node)+' '+str(node_tags[node])+'\n')
+                f.writelines('%s %s\n' % (node, node_styles[node]))
 
 
 if __name__ == "__main__":
