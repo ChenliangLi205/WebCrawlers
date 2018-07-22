@@ -91,7 +91,6 @@ class DoubanCrawler(BasicCrawler):
         doc = pq(page_data)
         items = doc('.tags-body')
         tags = items.find('a').text()
-        print(tags)
         return tags
 
     @staticmethod

@@ -27,6 +27,7 @@ class BasicCrawler(object):
         self.visited = set()
         self.current_url = None
         self.time_sleep = 3600
+        self.interval = 0
 
     def start_with(self, url):
         """
@@ -92,6 +93,7 @@ class BasicCrawler(object):
         """
         page_data = self.get_page_data()
         while page_data:
+            time.sleep(self.interval)
             self.process_page_data(page_data)
             page_data = self.get_page_data()
         return
