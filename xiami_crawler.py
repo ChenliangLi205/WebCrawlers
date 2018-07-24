@@ -6,6 +6,9 @@ import re
 from Basic import BasicCrawler
 
 
+# The Xiami Crawler is not runable yet because of the strong anti-crawl technique of Xiami.
+# Hopefully this will be solved in the future.
+
 def parse_args():
     """
     parse the arguments
@@ -31,6 +34,7 @@ class XiamiCrawler(BasicCrawler):
         super(XiamiCrawler, self).__init__()
         self.max_size = max_size
         self.graph = nx.Graph()
+        self.interval = 5
 
     def process_page_data(self, page_data):
         """
